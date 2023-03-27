@@ -38,6 +38,31 @@ const AddNewuser = async (req, res, next) => {
     next(error);
   }
 };
+const LoginUser = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return next(CreateError.BadRequest("Please provide all required fields."));
+  }
+  try {
+    const isValidEmail = await User.findOne({ email });
+    if (!isValidEmail) {
+      return next(CreateError.Unauthorized("Invalid Credentials"));
+    }
+
+    const isPasswordMatching = await User.comparePassword(password);
+
+    if (!isPasswordMatching) {
+      return next(CreateError.Unauthorized("Invalid Credentials"));
+    }
+
+    res.status(200).json({
+      message: "User Logged In Successfully.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 const UpdateUser = async (req, res, next) => {
   try {
     const { email, name } = req.body;
@@ -77,4 +102,4 @@ const DeleteUser = async (req, res, next) => {
   }
 };
 
-module.exports = { GetallUsers, AddNewuser, UpdateUser, DeleteUser };
+module.exports = { GetallUsers, AddNewuser, UpdateUser, DeleteUser, LoginUser };
