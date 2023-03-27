@@ -1,5 +1,6 @@
 const User = require("../models/Models.js");
 const CreateError = require("http-errors");
+const JWT = require("jsonwebtoken");
 
 const GetallUsers = async (req, res, next) => {
   try {
@@ -56,8 +57,30 @@ const LoginUser = async (req, res, next) => {
       return next(CreateError.Unauthorized("Invalid Credentials"));
     }
 
+    const accessToken = JWT.sign(
+      {
+        username: userfound.name,
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "40s" }
+    );
+
+    const refreshToken = JWT.sign(
+      {
+        username: userfound.name,
+      },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
     res.status(200).json({
       message: "User Logged In Successfully.",
+      accessToken,
+      refreshToken,
     });
   } catch (error) {
     next(error);
