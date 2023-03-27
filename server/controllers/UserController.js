@@ -1,6 +1,10 @@
 const User = require("../models/Models.js");
 const CreateError = require("http-errors");
-const JWT = require("jsonwebtoken");
+const {
+  signAccessToken,
+  signRefreshToken,
+  verifyAccessToken,
+} = require("../helpers/jwt_helper");
 
 const GetallUsers = async (req, res, next) => {
   try {
@@ -15,6 +19,7 @@ const GetallUsers = async (req, res, next) => {
     next(error);
   }
 };
+
 const AddNewuser = async (req, res, next) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
@@ -31,9 +36,14 @@ const AddNewuser = async (req, res, next) => {
         CreateError.BadRequest("Something went wrong, please try again later.")
       );
     }
+    console.log(result.id);
+    const accesstoken = await signAccessToken(result.id);
+    const refreshtoken = await signRefreshToken(result.id);
     res.status(201).json({
       message: "New user created successfully.",
       result,
+      accesstoken,
+      refreshtoken,
     });
   } catch (error) {
     next(error);
@@ -56,23 +66,14 @@ const LoginUser = async (req, res, next) => {
     if (!isPasswordMatching) {
       return next(CreateError.Unauthorized("Invalid Credentials"));
     }
+    const accesstoken = await signAccessToken(userfound.id);
+    const refreshtoken = await signRefreshToken(userfound.id);
     console.log(userfound);
-    const accessToken = JWT.sign(
-      { name: userfound.name },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "120s" }
-    );
-
-    const refreshToken = JWT.sign(
-      { name: userfound.name },
-      process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "10h" }
-    );
 
     res.status(200).json({
       message: "User Logged In Successfully.",
-      accessToken,
-      refreshToken,
+      accesstoken,
+      refreshtoken,
     });
   } catch (error) {
     next(error);

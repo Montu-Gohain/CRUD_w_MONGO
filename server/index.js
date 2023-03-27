@@ -2,13 +2,14 @@ const express = require("express");
 const CreateError = require("http-errors");
 const UserRotuer = require("./routes/UserRoutes");
 const EmployeeRouter = require("./routes/EmployeRoutes");
-const verifyJWT = require("./middlewares/verifyJWT");
+const { verifyAccessToken } = require("./helpers/jwt_helper");
 
 require("dotenv").config();
 require("./helpers/init_mongo.js");
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (_req, res) => {
   res.status(200).json({
@@ -17,7 +18,7 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/api/v1/users", UserRotuer);
-app.use("/api/v1/employees", verifyJWT, EmployeeRouter);
+app.use("/api/v1/employees", verifyAccessToken, EmployeeRouter);
 
 app.use("*/", (req, res, next) => {
   next(CreateError.NotFound("Page not found...check your url!"));
