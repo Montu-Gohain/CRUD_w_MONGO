@@ -1,20 +1,18 @@
-const JWT = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const CreateError = require("http-errors");
 
 const verifyJWT = (req, res, next) => {
-  const auth_headers = req.headers["authorization"];
+  const authHeaders = req.headers["authorization"];
+  if (!authHeaders) res.status(401).send("Unauthorized");
+  console.log(authHeaders);
+  const token = authHeaders.split(" ")[1];
 
-  if (!auth_headers) {
-    next(CreateError.NetworkAuthenticationRequire("You Are Unauthorized"));
-  }
-  const token = auth_headers.split(" ")[1];
-  JWT.verify(() => {
+  jwt.verify(() => {
     token,
       process.env.ACCESS_TOKEN_SECRET,
       (err, decode) => {
-        if (err) return next(CreateError.Unauthorized("Invalid Credentials"));
-        req.user = decode.username;
+        if (err) res.status(403).send("Token got infected");
+        req.user = decode.name;
         next();
       };
   });

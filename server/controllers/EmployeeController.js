@@ -45,7 +45,11 @@ const UpdateEmployee = async (req, res, next) => {
     return next(CreateError.BadRequest("Please provide all necessary fields."));
   }
   try {
-    const person = await Employee.findById(id);
+    const updates = req.body;
+    const options = { new: true };
+
+    const person = await Employee.findByIdAndUpdate(id, updates, options);
+
     if (!person) {
       return next(CreateError.NotFound("Invalid ID.. No user found"));
     }

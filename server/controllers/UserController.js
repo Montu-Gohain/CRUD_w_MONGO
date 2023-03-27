@@ -56,27 +56,19 @@ const LoginUser = async (req, res, next) => {
     if (!isPasswordMatching) {
       return next(CreateError.Unauthorized("Invalid Credentials"));
     }
-
+    console.log(userfound);
     const accessToken = JWT.sign(
-      {
-        username: userfound.name,
-      },
+      { name: userfound.name },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "40s" }
+      { expiresIn: "120s" }
     );
 
     const refreshToken = JWT.sign(
-      {
-        username: userfound.name,
-      },
+      { name: userfound.name },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "10h" }
     );
 
-    res.cookie("jwt", refreshToken, {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-    });
     res.status(200).json({
       message: "User Logged In Successfully.",
       accessToken,
