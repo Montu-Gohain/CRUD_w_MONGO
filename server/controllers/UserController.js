@@ -40,24 +40,21 @@ const AddNewuser = async (req, res, next) => {
 };
 const UpdateUser = async (req, res, next) => {
   try {
-    const { email } = req.body;
-
-    const isValidEmail = await User.findOne({ email });
-
-    if (!isValidEmail) {
-      return next(CreateError.Unauthorized("Invalid Credentials"));
-    }
-    const updates = req.body;
+    const { email, name } = req.body;
+    const updates = name;
     const options = { new: true };
-
-    const newName = await User.findOneAndUpdate({ email }, updates, options);
+    const newName = await User.findOneAndUpdate(
+      { email: email },
+      { name: updates },
+      options
+    );
 
     if (!newName) {
       return next(
         CreateError.BadRequest("Something went wrong, please try again later.")
       );
     }
-    res.status(200).json({ message: "Username updated Successfully" }, newName);
+    res.send(newName);
   } catch (error) {
     next(error);
   }

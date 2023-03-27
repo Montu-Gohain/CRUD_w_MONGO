@@ -14,7 +14,7 @@ app.get("/", (_req, res) => {
   });
 });
 
-app.use("/api/v1/user", UserRotuer);
+app.use("/api/v1/users", UserRotuer);
 
 app.use("*/", (req, res, next) => {
   next(CreateError.NotFound("Page not found...check your url!"));
