@@ -21,3 +21,29 @@
 ```sh
   yarn dev
 ```
+
+## Endpoints
+
+### Add new user
+
+method : post
+
+> http://localhost:PORT/api/v1/user
+
+### Get all users
+
+method : get
+
+> http://localhost:PORT/api/v1/user
+
+### Update users
+
+method : patch
+
+> http://localhost:PORT/api/v1/user
+
+### Delete users
+
+method : delete
+
+> http://localhost:PORT/api/v1/user

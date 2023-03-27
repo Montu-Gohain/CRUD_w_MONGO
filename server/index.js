@@ -1,5 +1,6 @@
 const express = require("express");
 const CreateError = require("http-errors");
+const UserRotuer = require("./routes/UserRoutes");
 
 require("dotenv").config();
 require("./helpers/init_mongo.js");
@@ -12,6 +13,8 @@ app.get("/", (_req, res) => {
     message: "Learning CRUD Operations with Express and MongoDB.",
   });
 });
+
+app.use("/api/v1/user", UserRotuer);
 
 app.use("*/", (req, res, next) => {
   next(CreateError.NotFound("Page not found...check your url!"));
