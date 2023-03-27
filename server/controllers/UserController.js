@@ -45,12 +45,12 @@ const LoginUser = async (req, res, next) => {
     return next(CreateError.BadRequest("Please provide all required fields."));
   }
   try {
-    const isValidEmail = await User.findOne({ email });
-    if (!isValidEmail) {
+    const userfound = await User.findOne({ email });
+    if (!userfound) {
       return next(CreateError.Unauthorized("Invalid Credentials"));
     }
 
-    const isPasswordMatching = await User.comparePassword(password);
+    const isPasswordMatching = await userfound.isValidPassword(password);
 
     if (!isPasswordMatching) {
       return next(CreateError.Unauthorized("Invalid Credentials"));
