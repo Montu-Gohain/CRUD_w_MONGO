@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (_req, res) => {
   res.status(200).json({
-    message: "Learning CRUD Operations with Express and MongoDB.",
+    message: "My First Node js Backend Application deployment.",
   });
 });
 

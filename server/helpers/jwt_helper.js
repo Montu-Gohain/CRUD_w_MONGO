@@ -55,25 +55,6 @@ const signRefreshToken = async (userId) => {
   });
 };
 const verifyRefreshToken = async (req, res, next) => {
-  //   return new Promise((resolve, reject) => {
-  //     JWT.verify(
-  //       refreshToken,
-  //       process.env.REFRESH_TOKEN_SECRET,
-  //       (err, payload) => {
-  //         if (err) return reject(createError.Unauthorized());
-  //         const userId = payload.aud;
-  //         client.GET(userId, (err, result) => {
-  //           if (err) {
-  //             console.log(err.message);
-  //             reject(createError.InternalServerError());
-  //             return;
-  //           }
-  //           if (refreshToken === result) return resolve(userId);
-  //           reject(createError.Unauthorized());
-  //         });
-  //       }
-  //     );
-  //   });
   if (!req.headers["authorization"]) return next(createError.Unauthorized());
   const authHeader = req.headers["authorization"];
   const token = authHeader.split(" ")[1];

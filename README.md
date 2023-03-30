@@ -24,7 +24,7 @@
 
 ## Endpoints
 
-### Add new user
+### Register a new User
 
 method : post
 
@@ -47,3 +47,28 @@ method : patch
 method : delete
 
 > http://localhost:PORT/api/v1/user
+
+---
+
+# Protected Rotues inside the Employee Router
+
+1. Get all employess
+
+method : GET
+
+> http://localhost:6060/api/v1/employees
+
+2. Add a new Employee
+
+method : POST
+
+> http://localhost:6060/api/v1/employees
+
+3. Update Employee
+   method : patch
+
+   > http://localhost:6060/api/v1/employees/id
+
+4. Delete Employee
+   method : delete
+   > http://localhost:6060/api/v1/employees/id
